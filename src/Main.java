@@ -23,12 +23,10 @@ public class Main
 
         populateGraph(graph1);
 
+        System.out.println("Before sink elimination");
         graph1.printGraph();
 
         graph1.removeSinks();
-        graph1.printGraph();
-
-
     }
 
     public static void populateGraph(Graph graph)
