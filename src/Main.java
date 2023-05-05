@@ -7,33 +7,27 @@ public class Main
     public static void main(String[] args)
     {
         Graph graph1 = new Graph();
-
-//        graph1.addEdge(2,3);
-//        graph1.addEdge(3,4);
-//        graph1.addEdge(3,2);
-//        graph1.addEdge(3,2);
-//        graph1.addEdge(3,2);
-//        graph1.addEdge(3,2);
-//        graph1.addEdge(3,2);
-//        graph1.addEdge(3,100);
-//        graph1.addEdge(3,7);
-//        graph1.addEdge(4,9);
-//        graph1.addEdge(4,13);
-//        graph1.addEdge(5,2);
-
         populateGraph(graph1);
 
         System.out.println("Before sink elimination");
         graph1.printGraph();
 
+        long startTimeRS = System.nanoTime();
         graph1.removeSinks();
+        long endTimeRS = System.nanoTime();
+
+        long startTimePC = System.nanoTime();
+        graph1.printCycle();
+        long endTimePC = System.nanoTime();
+
+        System.out.println("Execution time for removing sinks " + (endTimeRS - startTimeRS) + " nano Seconds");
+        System.out.println("Execution time for printing cycle " + (endTimePC - startTimePC) + " nano Seconds");
     }
 
     public static void populateGraph(Graph graph)
     {
         try
         {
-
             Scanner fileScanner = new Scanner(new File("GraphData.txt"));
             Integer startVertex;
             Integer endVertex;
@@ -43,7 +37,7 @@ public class Main
                 startVertex = fileScanner.nextInt();
                 endVertex = fileScanner.nextInt();
 
-                graph.addEdge(startVertex,endVertex);
+                graph.addEdge(startVertex, endVertex);
             }
 
         } catch (FileNotFoundException e)
