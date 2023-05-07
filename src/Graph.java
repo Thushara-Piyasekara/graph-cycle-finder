@@ -1,14 +1,43 @@
 import java.util.*;
 
+/**
+ * Represents a directed unweighted graph in an adjacency list structure
+ * @author Thusahra Piyasekara
+ *
+ */
+
+
 public class Graph
 {
-    private final HashMap<Integer, HashSet<Integer>> graphMap;
+    /**
+     * Property graphMap represents the graph as a HashMap of HashSets
+     * Key of the HashMap represents the starting node
+     * Value of the HashMap represents a HashSet of all the ending nodes
+     */
+    private HashMap<Integer, HashSet<Integer>> graphMap;
+    /**
+     * Property hashSinks is used to prevent the Graph.printCycle() method being called before eliminating the sinks
+     * Read the Graph.printCycle() description for more details
+     */
+    private boolean hasSinks = true;
 
+    /**
+     * Constructs an empty graph
+     *
+     */
     public Graph()
     {
         this.graphMap = new HashMap<>();
     }
 
+
+    /**
+     * Adds an edge to the graph
+     * New node keys will be added to the HashMap if the nodes are not already existing
+     * @param startVertex starting node of the edge
+     * @param endVertex ending node of the edge
+     *
+     */
     public void addEdge(Integer startVertex, Integer endVertex)
     {
         //Adding vertexes to the graph if they don't already exist
@@ -25,91 +54,77 @@ public class Graph
         graphMap.get(startVertex).add(endVertex);
     }
 
+
+    /**
+     * Removes all sink nodes from a Graph
+     * Prints conclusions after the sink elimination is over
+     *
+     */
     public void removeSinks()
     {
-        if (graphMap.isEmpty())
+        printGraph();                                           // Please note this line was omitted in the performance analysis in the report
+        if (graphMap.isEmpty())                                 // If the graph is empty, it should be acyclic
         {
             System.out.println("Graph is empty");
-            System.out.println("Graph is acyclic!!!");
-        } else
+            System.out.println("Conclusion : Yes. The graph is acyclic!!!");
+        } else                                                  // If the graph is not empty, there should be more sinks left or the graph is cyclic
         {
             HashSet<Integer> sinks = new HashSet<>();
             for (Integer node : graphMap.keySet())
             {
-                if (graphMap.get(node).isEmpty())
+                if (graphMap.get(node).isEmpty())               // If a node has no outgoing edges, it is a sink
                 {
                     System.out.printf("Vertex %d is a sink. It will be eliminated. \n", node);
                     sinks.add(node);
                 }
             }
-            if (sinks.isEmpty())
+            if (sinks.isEmpty())                                // If there are no sinks in the current graph, it is not acyclic
             {
-                System.out.println("No more sinks found.");
-                System.out.println("Graph is not empty after eliminating the sinks.");
-                System.out.println("Graph is not acyclic!");
+                hasSinks = false;
+                System.out.println("No more sinks found. Graph is not empty after eliminating the sinks.");
+                System.out.println("Conclusion : No. The graph is not acyclic!");
             } else
             {
-                //Remove the identified sink keys
-                graphMap.keySet().removeAll(sinks);
+                graphMap.keySet().removeAll(sinks);             // Eliminate the identified sink keys
 
-                //Remove the identified sink values
                 for (Integer key : this.graphMap.keySet())
                 {
-                    this.graphMap.get(key).removeAll(sinks);
+                    this.graphMap.get(key).removeAll(sinks);    // Eliminate the identified sink values
                 }
-                printGraph();
-                removeSinks();
+                removeSinks();                                  // Identify and remove new potential sinks
             }
         }
     }
 
-//    public void printCycle2()
-//    {
-//        HashSet<Integer> visited = new HashSet<>();
-//        Stack<Integer> nodeStack = new Stack<>();
-//
-//        Integer startingNode = this.graphMap.keySet().iterator().next();
-//        ArrayList<Integer> path = new ArrayList<>();
-//
-//        DFS(startingNode, path);
-//    }
-//
-//    public void DFS(Integer parent, ArrayList<Integer> path)
-//    {
-//        path.add(parent);
-//        for (Integer child : graphMap.get(parent))
-//        {
-//            if (path.contains(child))
-//            {
-//                printCycleArray(child, path);
-//                return;
-//            } else
-//            {
-//                DFS(child, path);
-//            }
-//        }
-//    }
 
+    /**
+     * Prints a cycle from a non-empty graph that has no sink nodes
+     * Graph.removeSinks() should be called beforehand for this method to execute
+     * Logic :- If a graph has no sink nodes, and it is not empty, it should have a cycle
+     *          Since all the sinks are eliminated, every node should have at least one outgoing edge
+     *          If we traverse from one outgoing edge to another, a cycle should be found after enough traversals
+     *
+     */
     public void printCycle()
     {
-        if (!isEmpty())
+        if (!isEmpty() && !hasSinks)
         {
-            Integer node = this.graphMap.keySet().iterator().next();
-            ArrayList<Integer> path = new ArrayList<>();
+            Integer node = this.graphMap.keySet().iterator().next();       // Selects a random node as the starting node
+            ArrayList<Integer> path = new ArrayList<>();                   // Keeps track of the traversed nodes
 
             boolean cycleFound = false;
             while (!cycleFound)
             {
-                if (path.contains(node))
+                if (path.contains(node))                                   // If the node was already traversed, it is a cycle
                 {
-                    System.out.print("Cycle Found: ");
+                    System.out.print("\nCycle Found: ");
                     for (int i = path.indexOf(node); i < path.size(); i++)
                     {
                         System.out.print(path.get(i) + " ==> ");
                     }
                     System.out.println(node);
                     cycleFound = true;
-                } else
+                } else                                                     // If the node was not already traversed, move on to the next node
                 {
                     path.add(node);
                     node = this.graphMap.get(node).stream().iterator().next();
@@ -118,22 +133,14 @@ public class Graph
         }
     }
 
-//    public static void printCycleArray(Integer duplicate, ArrayList<Integer> path)
-//    {
-//        System.out.print("Cycle : ");
-//        for (int i = path.indexOf(duplicate); i < path.size(); i++)
-//        {
-//            System.out.print(path.get(i) + " ==> ");
-//        }
-//        System.out.println(duplicate);
-//    }
 
-
+    /**
+     * Prints the graph in the form of an Adjacency List
+     *
+     */
     public void printGraph()
     {
-        // Filler TODO
         System.out.println();
-
         for (Integer key : this.graphMap.keySet())
         {
             System.out.print(key + " : ");
@@ -143,13 +150,17 @@ public class Graph
             }
             System.out.println(" ");
         }
-        // Filler TODO
-        System.out.println(" ");
+        System.out.println();
     }
 
+
+    /**
+     * Checks whether the graph is empty or not
+     * @return true if the graph is empty, false if the graph is not empty
+     *
+     */
     public boolean isEmpty()
     {
         return graphMap.isEmpty();
     }
-
 }
