@@ -1,12 +1,16 @@
+/**
+ * @author  Thushara Piyasekara
+ * @UoW_ID  w1899372
+ * @IIT_ID
+ *
+ */
+
 import java.util.*;
 
 /**
  * Represents a directed unweighted graph in an adjacency list structure
- * @author Thusahra Piyasekara
  *
  */
-
-
 public class Graph
 {
     /**

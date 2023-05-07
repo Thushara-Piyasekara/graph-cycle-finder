@@ -1,3 +1,10 @@
+/**
+ * @author  Thushara Piyasekara
+ * @UoW_ID  w1899372
+ * @IIT_ID
+ *
+ */
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.NoSuchElementException;
@@ -5,7 +12,6 @@ import java.util.Scanner;
 
 /**
  * This is the main class to perform the cycle finding algorithm
- * @author  Thushara Piyasekara
  *
  */
 public class Main
@@ -31,8 +37,8 @@ public class Main
             long endTimePC = System.nanoTime();
 
             System.out.println();
-            System.out.println("Execution time for removing sinks " + (endTimeRS - startTimeRS) + " nano Seconds");
-            System.out.println("Execution time for printing cycle " + (endTimePC - startTimePC) + " nano Seconds");
+            System.out.println("Execution time for removing sinks " + (endTimeRS - startTimeRS) + " nano seconds");
+            System.out.println("Execution time for printing cycle " + (endTimePC - startTimePC) + " nano seconds");
         }
     }
 
@@ -52,7 +58,7 @@ public class Main
             Integer startVertex;
             Integer endVertex;
 
-            while (fileScanner.hasNextLine())
+            while (fileScanner.hasNextInt())
             {
                 startVertex = fileScanner.nextInt();
                 endVertex = fileScanner.nextInt();
